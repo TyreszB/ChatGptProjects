@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./style/style.css";
-import { wait } from "@testing-library/user-event/dist/utils";
 
 function Home() {
   const [inputValue, setInputValue] = useState("");
@@ -20,7 +19,7 @@ function Home() {
     }
 
     try {
-      const res = await fetch("/api/chatgpt", {
+      const res = await fetch(`http://localhost:5001/api/chatgpt`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +29,11 @@ function Home() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
+        setPrompt(inputValue);
+        setResult(data.choices[0].message.content);
+        setJresult(JSON.stringify(data, null, 2));
+        setInputValue("");
+        setError("");
       } else {
         throw new Error("An error occured");
       }

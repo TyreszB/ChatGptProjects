@@ -1,10 +1,16 @@
 import OpenAI from "openai";
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 
-const express = require("express");
-const dotenv = require("dotenv");
 const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 dotenv.config();
 
@@ -13,10 +19,9 @@ const openai = new OpenAI({
 });
 
 async function runCompletion(prompt) {
-  const res = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: prompt,
-    max_tokens: 50,
+  const res = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: prompt }],
   });
 
   return res;
@@ -28,7 +33,7 @@ app.post("/api/chatgpt", async (req, res) => {
 
     const completion = await runCompletion(text);
 
-    res.json({ data: completion.data });
+    res.json(completion);
   } catch (error) {
     if (error.res) {
       console.error(error.res.status, error.res.data);
