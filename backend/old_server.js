@@ -18,29 +18,14 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function startCompletionStream(prompt) {
-  const res = await openai.chat.completions.create(
-    {
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 1,
-      max_tokens: 50,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-      stream: true,
-    },
-    {
-      responseType: "stream",
-    }
-  );
-
-  res.data.on("data", (data) => {
-    console.log(data);
+async function runCompletion(prompt) {
+  const res = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: prompt }],
   });
-}
 
-console.log(startCompletionStream("what dogs are red?"));
+  return res;
+}
 
 app.post("/api/chatgpt", async (req, res) => {
   try {

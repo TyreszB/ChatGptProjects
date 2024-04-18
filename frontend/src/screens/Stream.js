@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./style/style.css";
 
-function Home() {
+function Stream() {
   // Setting state for changes in the UI
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
@@ -83,4 +83,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Stream;
