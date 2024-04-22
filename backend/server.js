@@ -42,27 +42,27 @@ async function startCompletionStream(prompt) {
 
 console.log(startCompletionStream("what dogs are red?"));
 
-app.post("/api/chatgpt", async (req, res) => {
-  try {
-    const { text } = req.body;
+// app.post("/api/chatgpt", async (req, res) => {
+//   try {
+//     const { text } = req.body;
 
-    const completion = await runCompletion(text);
+//     const completion = await runCompletion(text);
 
-    res.json(completion);
-  } catch (error) {
-    if (error.res) {
-      console.error(error.res.status, error.res.data);
-      res.status(error.res.status).json();
-    } else {
-      console.error("Error with OPENAPI request", error.message);
-      res.status(500).json({
-        error: {
-          message: "An error occured during your request.",
-        },
-      });
-    }
-  }
-});
+//     res.json(completion);
+//   } catch (error) {
+//     if (error.res) {
+//       console.error(error.res.status, error.res.data);
+//       res.status(error.res.status).json();
+//     } else {
+//       console.error("Error with OPENAPI request", error.message);
+//       res.status(500).json({
+//         error: {
+//           message: "An error occured during your request.",
+//         },
+//       });
+//     }
+//   }
+// });
 
 const PORT = process.env.PORT || 5000;
 
