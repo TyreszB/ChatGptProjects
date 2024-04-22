@@ -18,11 +18,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function startCompletionStream(prompt) {
+async function startCompletionStream() {
   const res = await openai.chat.completions.create(
     {
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
+      messages: [{ role: "user", content: "what dogs are red?" }],
       temperature: 1,
       max_tokens: 50,
       top_p: 1,
@@ -34,35 +34,33 @@ async function startCompletionStream(prompt) {
       responseType: "stream",
     }
   );
-
-  res.data.on("data", (data) => {
-    console.log(data);
-  });
+  for await (const chunk of res) {
+    console.log(chunk.choices[0]?.delta?.content);
+  }
 }
+startCompletionStream();
 
-console.log(startCompletionStream("what dogs are red?"));
+app.post("/api/chatgpt", async (req, res) => {
+  try {
+    const { text } = req.body.trim();
 
-// app.post("/api/chatgpt", async (req, res) => {
-//   try {
-//     const { text } = req.body;
+    const completion = await startCompletionStream(text);
 
-//     const completion = await runCompletion(text);
-
-//     res.json(completion);
-//   } catch (error) {
-//     if (error.res) {
-//       console.error(error.res.status, error.res.data);
-//       res.status(error.res.status).json();
-//     } else {
-//       console.error("Error with OPENAPI request", error.message);
-//       res.status(500).json({
-//         error: {
-//           message: "An error occured during your request.",
-//         },
-//       });
-//     }
-//   }
-// });
+    res.json(completion);
+  } catch (error) {
+    if (error.res) {
+      console.error(error.res.status, error.res.data);
+      res.status(error.res.status).json();
+    } else {
+      console.error("Error with OPENAPI request", error.message);
+      res.status(500).json({
+        error: {
+          message: "An error occured during your request.",
+        },
+      });
+    }
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 
