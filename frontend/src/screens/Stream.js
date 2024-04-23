@@ -29,12 +29,12 @@ function Stream() {
         },
         body: JSON.stringify({ text: inputValue }),
       });
+      console.log(res.json());
 
       if (res.ok) {
-        const data = await res.json();
         setPrompt(inputValue);
-        setResult(data.choices[0].message.content);
-        setJresult(JSON.stringify(data, null, 2));
+        setResult(res);
+        // setJresult(JSON.stringify(data, null, 2));
         setInputValue("");
         setError("");
       } else {
