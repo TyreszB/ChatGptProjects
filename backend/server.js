@@ -35,15 +35,14 @@ async function startCompletionStream(text) {
     }
   );
   for await (const chunk of res) {
-    res.write(chunk.choices[0]?.delta?.content);
+    res.body = chunk;
+    // chunk.choices[0]?.delta?.content;
   }
 }
 
 app.post("/api/chatgpt", async (req, res) => {
   try {
     const { text } = req.body;
-    console.log("text returned");
-
     return startCompletionStream(text);
   } catch (error) {
     if (error.res) {

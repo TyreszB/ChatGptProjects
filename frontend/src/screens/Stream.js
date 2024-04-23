@@ -29,11 +29,12 @@ function Stream() {
         },
         body: JSON.stringify({ text: inputValue }),
       });
-      console.log(res.json());
 
       if (res.ok) {
+        console.log(res.body.getReader());
+
         setPrompt(inputValue);
-        setResult(res);
+        setResult(res.body);
         // setJresult(JSON.stringify(data, null, 2));
         setInputValue("");
         setError("");
