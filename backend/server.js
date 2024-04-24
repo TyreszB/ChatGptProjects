@@ -34,16 +34,16 @@ async function startCompletionStream(text) {
       responseType: "stream",
     }
   );
+
   for await (const chunk of res) {
-    res.body = chunk;
-    // chunk.choices[0]?.delta?.content;
+    res.send(chunk.choices[0]?.delta?.content);
   }
 }
 
 app.post("/api/chatgpt", async (req, res) => {
   try {
     const { text } = req.body;
-    return startCompletionStream(text);
+    await startCompletionStream(text);
   } catch (error) {
     if (error.res) {
       console.error(error.res.status, error.res.data);

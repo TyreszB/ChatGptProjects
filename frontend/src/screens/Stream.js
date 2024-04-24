@@ -30,11 +30,13 @@ function Stream() {
         body: JSON.stringify({ text: inputValue }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        console.log(res.body.getReader());
+        console.log(data);
 
         setPrompt(inputValue);
-        setResult(res.body);
+        setResult("");
         // setJresult(JSON.stringify(data, null, 2));
         setInputValue("");
         setError("");
