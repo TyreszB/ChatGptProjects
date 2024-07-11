@@ -30,18 +30,19 @@ function Stream() {
         body: JSON.stringify({ text: inputValue }),
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        console.log(data);
-
-        setPrompt(inputValue);
-        setResult("");
-        // setJresult(JSON.stringify(data, null, 2));
-        setInputValue("");
-        setError("");
-      } else {
-        throw new Error("An error occured");
+      const reader = res?.body?.getReader();
+      while (true) {
+        const { done, value: chunk } = await reader.read();
+        if (res.ok) {
+          setPrompt(inputValue);
+          setResult(chunk);
+          // setJresult(JSON.stringify(data, null, 2));
+          setInputValue("");
+          setError("");
+          if (done) break;
+        } else {
+          throw new Error("An error occured");
+        }
       }
     } catch (err) {
       console.log(err);

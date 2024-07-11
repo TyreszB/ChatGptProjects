@@ -36,7 +36,7 @@ async function startCompletionStream(text) {
   );
 
   for await (const chunk of res) {
-    res.send(chunk.choices[0]?.delta?.content);
+    res.write(chunk.choices[0]?.delta?.content || "");
   }
 }
 
